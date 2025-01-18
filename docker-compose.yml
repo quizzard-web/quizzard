@@ -9,3 +9,24 @@ services:
       - ./frontend:/app
       - /app/node_modules
     command: npm run dev
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    # environment:
+      # - MONGO_URI=  # MongoDB connection string
+    # depends_on:
+      # - mongo  # Ensure MongoDB starts first
+    command: npm start
+
+  # mongo:
+  #   image: mongo:6.0
+  #   container_name: mongo
+  #   ports:
+  #     - "27017:27017"
