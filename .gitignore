@@ -33,3 +33,6 @@ test-results/
 playwright-report/
 
 *.env
+
+# transpiled output directory
+/backend/build
