@@ -1,14 +1,15 @@
+import { isNull } from "lodash";
 import prisma from "../prismaClient";
 
 export default async function termSeeder() {
     const user = await prisma.user.findFirst({ where: { email: "quizzard.web@gmail.com" } });
 
-    if (user) {
+    if (!isNull(user)) {
         const quiz1 = await prisma.quiz.findFirst({ where: { title: "Decoding the Market", ownerId: user.id }});
         const quiz2 = await prisma.quiz.findFirst({ where: { title: "MedMastery: Healing the Mind and Body", ownerId: user.id }});
         const quiz3 = await prisma.quiz.findFirst({ where: { title: "History in Motion", ownerId: user.id }});
 
-        if (quiz1) {
+        if (!isNull(quiz1)) {
             await prisma.term.createMany({
                 data: [
                     {
@@ -75,7 +76,7 @@ export default async function termSeeder() {
             })
         }
 
-        if (quiz2) {
+        if (!isNull(quiz2)) {
             await prisma.term.createMany({
                 data: [
                     {
@@ -143,7 +144,7 @@ export default async function termSeeder() {
             })
         }
 
-        if (quiz3) {
+        if (!isNull(quiz3)) {
             await prisma.term.createMany({
                 data: [
                     {

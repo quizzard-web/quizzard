@@ -6,8 +6,12 @@ import prisma from "../prismaClient";
  * these data need to be secured
  */
 export default async function userSeeder() {
-    await prisma.user.create({
-        data: {
+    await prisma.user.upsert({
+        where: {
+            email: "quizzard.web@gmail.com"
+        },
+        update: {},
+        create: {
             firstName: "Quizzard",
             lastName: "Inc.",
             email: "quizzard.web@gmail.com",

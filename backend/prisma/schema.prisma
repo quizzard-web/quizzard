@@ -109,8 +109,8 @@ model User {
   invitationsSent Invitation[] @relation(name: "InvitationSender")
   invitationsReceived Invitation[] @relation(name: "InvitationReceiver")
 
-  quizIDs String[] @db.ObjectId
-  quizzes Quiz[] @relation(fields: [quizIDs], references: [id])
+  quizIds String[] @db.ObjectId
+  quizzes Quiz[] @relation(fields: [quizIds], references: [id])
 
   ownedQuizzes Quiz[] @relation(name: "QuizOwner")
   updatedTerms Term[]
@@ -149,14 +149,14 @@ model Quiz {
   ownerId String @db.ObjectId
   owner User @relation(fields: [ownerId], references: [id], name: "QuizOwner")
 
-  contributorIDs String[] @db.ObjectId
-  contributors User[] @relation(fields: [contributorIDs], references: [id])
+  contributorIds String[] @db.ObjectId
+  contributors User[] @relation(fields: [contributorIds], references: [id])
 
-  dailyFeatureIDs String[] @db.ObjectId
-  dailyFeature DailyFeature[] @relation(fields: [dailyFeatureIDs], references: [id])
+  dailyFeatureIds String[] @db.ObjectId
+  dailyFeature DailyFeature[] @relation(fields: [dailyFeatureIds], references: [id])
 
-  popularFeatureIDs String[] @db.ObjectId
-  popularFeature MostPopularFeature[] @relation(fields: [popularFeatureIDs], references: [id])
+  popularFeatureIds String[] @db.ObjectId
+  popularFeature MostPopularFeature[] @relation(fields: [popularFeatureIds], references: [id])
 }
 
 model Term {
@@ -214,8 +214,8 @@ model DailyFeature {
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
 
-  quizIDs String[] @db.ObjectId
-  quizzes Quiz[] @relation(fields: [quizIDs], references: [id])
+  quizIds String[] @db.ObjectId
+  quizzes Quiz[] @relation(fields: [quizIds], references: [id])
 }
 
 model MostPopularFeature {
@@ -224,6 +224,6 @@ model MostPopularFeature {
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
 
-  quizIDs String[] @db.ObjectId
-  quizzes Quiz[] @relation(fields: [quizIDs], references: [id])
+  quizIds String[] @db.ObjectId
+  quizzes Quiz[] @relation(fields: [quizIds], references: [id])
 }
