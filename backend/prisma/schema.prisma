@@ -1,0 +1,229 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"] // required to run the app on docker
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum TagName {
+  agriculture
+  anthropology
+  archaeology
+  architecture
+  area_studies
+  astronomy
+  atmospheric_sciences
+  biology
+  chemistry
+  communication_studies
+  computer_science
+  criminology
+  culinary_arts
+  dentistry
+  divinity
+  earth_sciences
+  ecology
+  economics
+  engineering
+  environmental_studies
+  ethnic_and_cultural_studies
+  geography
+  history
+  law
+  linguistics_and_languages
+  literature
+  logic
+  mathematics
+  medicine
+  neuroscience
+  nursing
+  oceanography
+  organizational_studies
+  performing_arts
+  pharmacy
+  philosophy
+  physics
+  political_science
+  psychology
+  public_health
+  religion
+  sociology
+  space_sciences
+  statistics
+  systems_science
+  the_arts
+  veterinary_medicine
+  visual_arts
+}
+
+enum AccountStatus {
+  verified
+  unverified
+}
+
+enum InvitationStatus {
+  accepted
+  rejected
+  pending
+}
+
+enum Gender {
+  man
+  woman
+  non_binary
+}
+
+type Settings {
+  receiveNewsletter Boolean
+}
+
+type QuizTheme {
+  backgroundColor String
+  textColor String
+  image String
+  accentColor String
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  firstName String
+  lastName String
+  email String @unique
+  password String
+  accountStatus AccountStatus @default(unverified)
+  gender Gender
+  settings Settings 
+  preferredTags String[]
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  invitationsSent Invitation[] @relation(name: "InvitationSender")
+  invitationsReceived Invitation[] @relation(name: "InvitationReceiver")
+
+  quizIds String[] @db.ObjectId
+  quizzes Quiz[] @relation(fields: [quizIds], references: [id])
+
+  ownedQuizzes Quiz[] @relation(name: "QuizOwner")
+  updatedTerms Term[]
+}
+
+model Invitation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  status InvitationStatus
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  senderId String @db.ObjectId
+  sender User @relation(name: "InvitationSender", fields: [senderId], references: [id])
+
+  receiverId String @db.ObjectId
+  receiver User @relation(name: "InvitationReceiver", fields: [receiverId], references: [id])
+
+  quizId String @db.ObjectId
+  quiz Quiz @relation(fields: [quizId], references: [id])
+}
+
+model Quiz {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String @unique
+  description String
+  theme QuizTheme
+  tags TagName[]
+  totalAttempts Int @default(0)
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  terms Term[]
+  invitations Invitation[]
+  attempts Attempt[]
+
+  ownerId String @db.ObjectId
+  owner User @relation(fields: [ownerId], references: [id], name: "QuizOwner")
+
+  contributorIds String[] @db.ObjectId
+  contributors User[] @relation(fields: [contributorIds], references: [id])
+
+  dailyFeatureIds String[] @db.ObjectId
+  dailyFeature DailyFeature[] @relation(fields: [dailyFeatureIds], references: [id])
+
+  popularFeatureIds String[] @db.ObjectId
+  popularFeature MostPopularFeature[] @relation(fields: [popularFeatureIds], references: [id])
+}
+
+model Term {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  term String
+  definition String
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  quizId String @db.ObjectId
+  quiz Quiz @relation(fields: [quizId], references: [id])
+
+  lastUpdatedById String @db.ObjectId
+  lastUpdateBy User @relation(fields: [lastUpdatedById], references: [id])
+}
+
+model Attempt {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  correct Int
+  mistakes Int
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  quizId String @db.ObjectId
+  quiz Quiz @relation(fields: [quizId], references: [id])
+
+  attemptAnswers AttemptAnswer[]
+}
+
+model AttemptAnswer {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  term String
+  definition String
+  answer String
+  correct Boolean
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  attemptId String @db.ObjectId
+  attempt Attempt @relation(fields: [attemptId], references: [id])
+}
+
+model Tag {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name TagName @unique
+  quiz_count Int @default(0)
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+}
+
+model DailyFeature {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  featuredDate DateTime @unique
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  quizIds String[] @db.ObjectId
+  quizzes Quiz[] @relation(fields: [quizIds], references: [id])
+}
+
+model MostPopularFeature {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  featuredDate DateTime @unique
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  quizIds String[] @db.ObjectId
+  quizzes Quiz[] @relation(fields: [quizIds], references: [id])
+}

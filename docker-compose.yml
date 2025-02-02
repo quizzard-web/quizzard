@@ -19,14 +19,12 @@ services:
     volumes:
       - ./backend:/app
       - /app/node_modules
-    # environment:
-      # - MONGO_URI=  # MongoDB connection string
-    # depends_on:
-      # - mongo  # Ensure MongoDB starts first
-    command: npm start
+    depends_on:
+       - mongo
+    command: npm run dev
 
-  # mongo:
-  #   image: mongo:6.0
-  #   container_name: mongo
-  #   ports:
-  #     - "27017:27017"
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
