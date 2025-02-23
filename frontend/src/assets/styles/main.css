@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
+@import "tailwindcss";
+@import "./font-face.css";
+
+:root {
+  --black-100: #000000;
+  --black-200: #121212;
+  --black-300: #242424;
+  --black-400: #373737;
+  --black-500: #494949;
+  --black-600: #5b5b5b;
+  --black-700: #6d6d6d;
+  --black-800: #808080;
+  --black-900: #929292;
+  --black-950: #a4a4a4;
+  --white-100: #ffffff;
+  --white-200: #fefefe;
+  --white-300: #efefef;
+  --white-400: #dcdcdc;
+  --white-500: #bdbdbd;
+  --white-600: #989898;
+  --white-700: #7c7c7c;
+  --white-800: #656565;
+  --white-900: #525252;
+  --white-950: #464646;
+}
+
+@theme {
+  --drop-shadow-theme: 0px 4px 10px rgba(235, 235, 235, 0.5);
+  --drop-shadow-profile-drawer: 0px 4px 20px rgba(189, 189, 189, 0.2);
+
+  --font-space-grotesk: "Space Grotesk", serif;
+
+  --color-black-100: var(--black-100);
+  --color-black-200: var(--black-200);
+  --color-black-300: var(--black-300);
+  --color-black-400: var(--black-400);
+  --color-black-500: var(--black-500);
+  --color-black-600: var(--black-600);
+  --color-black-700: var(--black-700);
+  --color-black-800: var(--black-800);
+  --color-black-900: var(--black-900);
+  --color-black-950: var(--black-950);
+  --color-white-100: var(--white-100);
+  --color-white-200: var(--white-200);
+  --color-white-300: var(--white-300);
+  --color-white-400: var(--white-400);
+  --color-white-500: var(--white-500);
+  --color-white-600: var(--white-600);
+  --color-white-700: var(--white-700);
+  --color-white-800: var(--white-800);
+  --color-white-900: var(--white-900);
+  --color-white-950: var(--white-950);
+
+  --font-action-lg: clamp(1.125rem, 1.0886rem + 0.1794vw, 1.25rem);
+  --font-action-md: clamp(0.875rem, 0.8386rem + 0.1794vw, 1rem);
+  --font-action-sm: clamp(0.75rem, 0.7136rem + 0.1794vw, 0.875rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  }
+}
+
+body {
+  font-family: "Satoshi", sans-serif;
+  font-feature-settings: "ss01" on;
+}
