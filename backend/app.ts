@@ -1,5 +1,5 @@
+import { prisma } from "./prisma/prismaClient";
 import express from "express";
-import prisma from "./prisma/prismaClient";
 import router from "./routes";
 
 const app = express();
@@ -20,5 +20,3 @@ async function testFetch() {
 
     console.log(quiz?.terms);
 }
-
-testFetch();

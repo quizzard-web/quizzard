@@ -1,5 +1,5 @@
+import { prisma } from "../prismaClient";
 import { Tag } from "@prisma/client";
-import prisma from "../prismaClient";
 
 const TAGS: Pick<Tag, "name">[] = [
     { name: "agriculture" },
@@ -53,15 +53,15 @@ const TAGS: Pick<Tag, "name">[] = [
 ];
 
 export default async function tagSeeder() {
-    TAGS.forEach(async function (tag) {
+    for (const TAG of TAGS) {
         await prisma.tag.upsert({
             where: {
-                name: tag.name
+                name: TAG.name
             },
             update: {},
             create: {
-                name: tag.name
+                name: TAG.name
             }
         })
-    });
+    }
 }
