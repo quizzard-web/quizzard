@@ -2,11 +2,11 @@
 import CreateQuizButton from "@/components/_containment/buttons/CreateQuizButton.vue";
 import AppLogo from "@/components/_misc/AppLogo.vue";
 import { PhBellSimple, PhLineVertical, PhMagnifyingGlass, PhQuestion } from "@phosphor-icons/vue";
-import { RouterLink } from "vue-router";
-import CommandMenu from "../CommandMenu.vue";
-import AccountAvatar from "../AccountAvatar.vue";
-import ProfileDrawer from "../ProfileDrawer.vue";
 import { ref } from "vue";
+import { RouterLink } from "vue-router";
+import AccountAvatar from "../AccountAvatar.vue";
+import CommandMenu from "../CommandMenu.vue";
+import ProfileDrawer from "../ProfileDrawer.vue";
 
 const isOpen = ref(false);
 
