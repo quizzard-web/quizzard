@@ -1,5 +1,5 @@
+import { prisma } from "../prismaClient";
 import { isNull } from "lodash";
-import prisma from "../prismaClient";
 
 export default async function termSeeder() {
     const user = await prisma.user.findFirst({ where: { email: "quizzard.web@gmail.com" } });

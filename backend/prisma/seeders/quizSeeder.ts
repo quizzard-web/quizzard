@@ -1,6 +1,6 @@
 import { isNull } from "lodash";
+import { prisma } from "../prismaClient";
 import { Quiz } from "@prisma/client";
-import prisma from "../prismaClient";
 
 export default async function quizSeeder() {
     const user = await prisma.user.findFirst({ where: { email: "quizzard.web@gmail.com" } });
@@ -48,12 +48,12 @@ export default async function quizSeeder() {
             },
         ];
 
-        QUIZZES.forEach(async function (quizItem) {
+        for (const QUIZ of QUIZZES) {
             const quiz = await prisma.quiz.findFirst({
                 where: {
                     ownerId: user.id,
                     title: {
-                        equals: quizItem.title,
+                        equals: QUIZ.title,
                         mode: "insensitive"
                     },
                 }
@@ -64,19 +64,24 @@ export default async function quizSeeder() {
                     where: {
                         id: quiz.id,
                     },
-                    data: { ...quizItem }
+                    data: { ...QUIZ }
                 })
             } else {
                 await prisma.quiz.create({
-                    data: { ...quizItem }
+                    data: { ...QUIZ }
                 })
             }
-        });
 
-        await Promise.all([
-            prisma.tag.update({ where: { name: "economics" }, data: { quiz_count: 1 } }),
-            prisma.tag.update({ where: { name: "medicine" }, data: { quiz_count: 1 } }),
-            prisma.tag.update({ where: { name: "history" }, data: { quiz_count: 1 } })
-        ]);
+            await prisma.tag.updateMany({
+                where: {
+                  name: { in: QUIZ.tags }
+                },
+                data: {
+                  quiz_count: {
+                    increment: 1
+                  }
+                },
+            });
+        }
     }
 }
