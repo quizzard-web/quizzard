@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const token = route.query.token as string|null || localStorage.getItem("accessToken");
-const server_url = import.meta.env.VITE_SERVER_URL;
+const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 /**
  * @todo
@@ -14,7 +14,7 @@ const server_url = import.meta.env.VITE_SERVER_URL;
  */
 async function fetchUser() {
         try {
-            const response = await fetch(server_url + "/api/user", {
+            const response = await fetch(serverUrl + "/api/user", {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token,
@@ -52,7 +52,7 @@ if (token) {
 
 <template>
     <div>
-        <a v-if="!token" :href="`${server_url}/auth/login/federated/google`">
+        <a v-if="!token" :href="`${serverUrl}/auth/login/federated/google`">
             Login with Google
         </a>
         <div v-if="token">Authenticating...</div>

@@ -6,7 +6,7 @@ import { ref } from "vue";
 const quizzes = ref([] as any);
 let user = JSON.parse(localStorage.getItem("user") || "{}");
 const token = localStorage.getItem("accessToken");
-const server_url = import.meta.env.VITE_SERVER_URL;
+const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const fetchQuizzes = async () => {
   /**
@@ -15,7 +15,7 @@ const fetchQuizzes = async () => {
    */
   try {
     const response = await fetch(
-      server_url + "/api/quiz", {
+      serverUrl + "/api/quiz", {
         method: "GET",
         headers: {
             "Authorization": "Bearer " + token,
