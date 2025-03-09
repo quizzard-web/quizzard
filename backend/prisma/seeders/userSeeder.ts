@@ -13,11 +13,9 @@ export default async function userSeeder() {
         update: {},
         create: {
             firstName: "Quizzard",
-            lastName: "Inc.",
             email: "quizzard.web@gmail.com",
             accountStatus: "verified",
             gender: "non_binary",
-            password: "password",
             settings: {
                 receiveNewsletter: false,
             },   
