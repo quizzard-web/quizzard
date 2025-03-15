@@ -1,22 +1,31 @@
-import { prisma } from "./prisma/prismaClient";
+import { verifyAccessToken } from "./routes/middlewares";
+import apiRoutes from "./routes/api";
+import authRoutes from "./routes/auth";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
-import router from "./routes";
 
 const app = express();
 
 app.listen(3000, () => console.log("app is running"));
 
-app.use(router);
+/**
+ * Register third-party middlewares
+ */
+app.use(cookieParser());
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+}));
 
-async function testFetch() {
-    const quiz = await prisma.quiz.findUnique({
-        where: {
-            title: "Decoding the Market" 
-        },
-        include: {
-            terms: true
-        }
-    });
+/**
+ * Register custom route middlewares
+ */
+app.use("/api", verifyAccessToken);
 
-    console.log(quiz?.terms);
-}
+/**
+ * Register routes
+ */
+app.use("/auth", authRoutes);
+app.use("/api", apiRoutes);
+

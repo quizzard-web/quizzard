@@ -82,6 +82,10 @@ enum Gender {
   non_binary
 }
 
+enum AuthProviders {
+  google
+}
+
 type Settings {
   receiveNewsletter Boolean
 }
@@ -93,12 +97,16 @@ type QuizTheme {
   accentColor String
 }
 
+type FederatedCredential {
+  provider AuthProviders
+  providerSubjectId String
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   firstName String
-  lastName String
-  email String @unique
-  password String
+  lastName String?
+  email String? @unique
   accountStatus AccountStatus @default(unverified)
   gender Gender
   settings Settings 
@@ -109,11 +117,16 @@ model User {
   invitationsSent Invitation[] @relation(name: "InvitationSender")
   invitationsReceived Invitation[] @relation(name: "InvitationReceiver")
 
+  attemptIds String[] @db.ObjectId
+  attempts Attempt[]
+
   quizIds String[] @db.ObjectId
   quizzes Quiz[] @relation(fields: [quizIds], references: [id])
 
   ownedQuizzes Quiz[] @relation(name: "QuizOwner")
   updatedTerms Term[]
+
+  federatedCredentials FederatedCredential[]
 }
 
 model Invitation {
@@ -179,6 +192,9 @@ model Attempt {
   mistakes Int
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
+
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id])
 
   quizId String @db.ObjectId
   quiz Quiz @relation(fields: [quizId], references: [id])
