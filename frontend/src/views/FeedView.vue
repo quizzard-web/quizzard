@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Headline from "@/components/_containment/typography/Headline.vue";
 import FeedLayout from "@/layouts/FeedLayout.vue";
 import { ref } from "vue";
 
