@@ -2,9 +2,7 @@ import _ from "lodash";
 import { prisma } from "../prisma/prismaClient";
 import { Router } from "express";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import jwt from "jsonwebtoken";
 import passport from "passport";
-import { verifyAccessToken, verifyRefreshToken } from "./middlewares";
 
 const router = Router();
 
@@ -39,63 +37,43 @@ passport.use(new GoogleStrategy({
                         provider: "google",
                         providerSubjectId: profile.id
                     }],
+                    accountStatus: profile._json.email_verified ? "verified" : "unverified",
                 }
             })
         }
 
-        const jwtAccessToken = jwt.sign(
-            { userId: user.id },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        );
-
-        const jwtRefreshToken = jwt.sign(
-            { userId: user.id },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
-        );
-    
-        cb(null, { jwtAccessToken, jwtRefreshToken });
+        cb(null, user);
     } catch (e) {
         cb(e);
     }
   }
 ));
 
-router.get("/login/federated/google", passport.authenticate("google", { session: false }));
+passport.serializeUser(function(user, cb) {
+    process.nextTick(function() {
+        cb(null, { id: user.id });
+    });
+});
+  
+  passport.deserializeUser(function(user: Express.User, cb) {
+    process.nextTick(function() {
+      return cb(null, user);
+    });
+});
 
-router.get("/oauth2/redirect/google", passport.authenticate(
-    "google",
-    { session: false }),
-    (req, res) => {
-        res.cookie("refreshToken", req.user?.jwtRefreshToken, { httpOnly: true });
-        res.redirect(
-            process.env.CLIENT_URL + "/login?success=true&token=" + req.user?.jwtAccessToken
-        );
-    }
-);
+router.get("/login/federated/google", passport.authenticate("google"));
 
-router.get("/accessToken", verifyRefreshToken, (req, res) => {
-    const user = req.user;
+router.get("/oauth2/redirect/google", passport.authenticate("google", {
+    successRedirect: process.env.CLIENT_URL + "/login?success=true",
+    failureRedirect: process.env.CLIENT_URL + "/login?success=false"
+}));
 
-    if (user) {
-        const jwtAccessToken = jwt.sign(
-            { userId: user.id },
-            process.env.JWT_SECRET,
-            { expiresIn: "1m" }
-        );
+router.post("/logout", (req, res, next) => {
+    req.logout((err) => {
+        if (err) next(err);
 
-        res.status(200).json({
-            accessToken: jwtAccessToken
-        });
-    } else {
-        res.send(404);
-    }
-})
-
-router.post("/logout", verifyAccessToken, (req, res) => {
-    res.clearCookie("refreshToken");
-    res.send(200);
+        res.status(200).send();
+    })
 });
 
 export default router;
