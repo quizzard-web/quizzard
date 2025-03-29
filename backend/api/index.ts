@@ -1,9 +1,9 @@
-import { isAuthenticated } from "./routes/middlewares";
-import apiRoutes from "./routes/api";
-import authRoutes from "./routes/auth";
+import { isAuthenticated } from "../routes/middlewares";
+import apiRoutes from "../routes/api";
+import authRoutes from "../routes/auth";
 import cors from "cors";
 import express from "express";
-import indexRoutes from "./routes";
+import indexRoutes from "../routes";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import session from "express-session";
