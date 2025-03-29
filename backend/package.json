@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only api/index.ts",
     "prisma": "npx prisma db push",
     "build": "npm run prisma && tsc",
-    "start": "node build/index.js",
+    "start": "node build/api/index.js",
     "seed": "node build/prisma/seeders/_seed.js"
   },
   "dependencies": {
